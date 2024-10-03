@@ -28,7 +28,7 @@ export default function SidebarPoke({ onHide }) {
 
   return (
     <div
-      className={`fixed left-0 top-1/2 w-4 h-16 bg-purple-500 rounded-r-full transition-all duration-300 ease-in-out ${
+      className={`fixed left-0 top-1/2 w-4 h-16 bg-purple-500 rounded-r-full transition-all duration-300 ease-in-out z-30 ${
         isPoking ? 'translate-x-0' : '-translate-x-full'
       } ${isJumping ? 'animate-jump-horizontal' : ''} ${
         isFading ? 'opacity-0' : 'opacity-100'

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useLocation } from 'react-router-dom'
 import Navigation from './Navigation'
-import FloatingBubbles from './FloatingBubbles'
+import WavyBubbleRivers from './WavyBubbleRivers'
 import FadeInWrapper from './FadeInWrapper'
 import SidebarPoke from './SidebarPoke'
 
@@ -30,18 +30,21 @@ export default function Layout({ children }) {
 
   return (
     <div className="relative min-h-screen bg-black text-white overflow-hidden">
-      <FloatingBubbles />
-      <FadeInWrapper>
-        <div className="relative z-10 flex min-h-screen">
-          <Navigation isVisible={isNavVisible} />
-          <main className="flex-1 p-8 flex items-center justify-center">
-            <div className="max-w-3xl w-full">
-              {children}
-            </div>
-          </main>
-        </div>
-      </FadeInWrapper>
-      {showPoke && <SidebarPoke onHide={handleHidePoke} />}
+      <WavyBubbleRivers />
+      <div className="relative z-10 min-h-screen">
+        <div className="absolute inset-0 backdrop-blur bg-black/30" />
+        <FadeInWrapper>
+          <div className="relative z-20 flex min-h-screen">
+            <Navigation isVisible={isNavVisible} />
+            <main className="flex-1 p-8 flex items-center justify-center">
+              <div className="max-w-3xl w-full">
+                {children}
+              </div>
+            </main>
+          </div>
+        </FadeInWrapper>
+        {showPoke && <SidebarPoke onHide={handleHidePoke} />}
+      </div>
     </div>
   )
 }
