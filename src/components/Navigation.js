@@ -5,7 +5,7 @@
 
 import React, { useState, useEffect, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Mountain } from 'lucide-react'
+import logoImage from '../images/Logo.png' // Updated import path
 
 const navItems = [
   { name: 'Home', path: '/' },
@@ -100,10 +100,27 @@ export default function Navigation({ isVisible, forceOpen, onHover }) {
 }
 
 function Logo() {
+  const [imageError, setImageError] = useState(false)
+
+  const handleImageError = () => {
+    console.error('Failed to load logo image')
+    setImageError(true)
+  }
+
   return (
     <div className="text-3xl font-bold text-purple-400 flex items-center justify-center mb-8">
-      <Mountain className="w-8 h-8 mr-2" />
-      <span>MyLogo</span>
+      {!imageError ? (
+        <img 
+          src={logoImage} 
+          alt="DO Logo" 
+          className="w-16 h-16" 
+          onError={handleImageError}
+        />
+      ) : (
+        <div className="w-16 h-16 bg-purple-600 flex items-center justify-center rounded-full">
+          <span className="text-white">DO</span>
+        </div>
+      )}
     </div>
   )
 }
