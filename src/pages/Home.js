@@ -1,7 +1,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 
-export default function Home() {
+export default function Home({ onExploreClick }) {
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -14,7 +14,10 @@ export default function Home() {
         <p className="text-xl mb-8">
           My name is Denis, and I am a passionate web developer creating beautiful websites.
         </p>
-        <button className="bg-purple-600 text-white px-6 py-3 rounded-full text-lg hover:bg-purple-700 transition-colors">
+        <button 
+          className="bg-purple-600 text-white px-6 py-3 rounded-full text-lg hover:bg-purple-700 transition-colors"
+          onClick={onExploreClick}
+        >
           Explore My Work
         </button>
       </div>

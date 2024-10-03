@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useLocation, useNavigate } from 'react-router-dom'
 import Home from '../pages/Home'
@@ -15,55 +15,40 @@ const pages = [
   { path: '/contact', component: Contact },
 ]
 
-function debounce(func, wait) {
-  let timeout
-  return function executedFunction(...args) {
-    const later = () => {
-      clearTimeout(timeout)
-      func(...args)
-    }
-    clearTimeout(timeout)
-    timeout = setTimeout(later, wait)
-  }
-}
-
-export default function LevelSystem() {
+export default function LevelSystem({ onExploreClick }) {
   const location = useLocation()
   const navigate = useNavigate()
   const [currentIndex, setCurrentIndex] = useState(0)
   const [direction, setDirection] = useState(0)
-  const [isScrolling, setIsScrolling] = useState(false)
+  const isScrollingRef = useRef(false)
 
   useEffect(() => {
     const index = pages.findIndex(page => page.path === location.pathname)
     setCurrentIndex(index !== -1 ? index : 0)
   }, [location])
 
-  const handleScroll = useCallback((delta) => {
-    if (isScrolling) return
-
-    setIsScrolling(true)
-    if (delta > 0 && currentIndex < pages.length - 1) {
-      setDirection(1)
-      navigate(pages[currentIndex + 1].path)
-    } else if (delta < 0 && currentIndex > 0) {
-      setDirection(-1)
-      navigate(pages[currentIndex - 1].path)
-    }
-    setTimeout(() => setIsScrolling(false), 800) // Prevent scrolling for 0.8 second
-  }, [currentIndex, navigate, isScrolling])
-
-  const debouncedHandleScroll = useCallback(debounce(handleScroll, 50), [handleScroll])
-
   useEffect(() => {
     const handleWheel = (e) => {
-      e.preventDefault()
-      debouncedHandleScroll(e.deltaY)
+      if (isScrollingRef.current) return
+
+      isScrollingRef.current = true
+
+      if (e.deltaY > 0 && currentIndex < pages.length - 1) {
+        setDirection(1)
+        navigate(pages[currentIndex + 1].path)
+      } else if (e.deltaY < 0 && currentIndex > 0) {
+        setDirection(-1)
+        navigate(pages[currentIndex - 1].path)
+      }
+
+      setTimeout(() => {
+        isScrollingRef.current = false
+      }, 1000) // 1 second cooldown between page changes
     }
 
-    window.addEventListener('wheel', handleWheel, { passive: false })
+    window.addEventListener('wheel', handleWheel)
     return () => window.removeEventListener('wheel', handleWheel)
-  }, [debouncedHandleScroll])
+  }, [currentIndex, navigate])
 
   const variants = {
     enter: (direction) => ({
@@ -92,11 +77,11 @@ export default function LevelSystem() {
           exit="exit"
           transition={{
             x: { type: 'spring', stiffness: 300, damping: 30, restDelta: 0.01 },
-            opacity: { duration: 0.2 },
+            opacity: { duration: 0.5 },
           }}
           className="h-full w-full absolute"
         >
-          {React.createElement(pages[currentIndex].component)}
+          {React.createElement(pages[currentIndex].component, { onExploreClick })}
         </motion.div>
       </AnimatePresence>
     </div>
