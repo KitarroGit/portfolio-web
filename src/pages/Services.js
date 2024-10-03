@@ -2,9 +2,9 @@ import React from 'react'
 import { motion } from 'framer-motion'
 
 const services = [
-  { title: 'Web Development', description: 'Custom website development' },
-  { title: 'UI/UX Design', description: 'Hopefully this website showcases some of my skills in a good light' },
-  { title: 'Mobile App Development', description: 'Still learning, but can take ideas' },
+  { title: 'Web Development', description: 'Custom website development.' },
+  { title: 'UI/UX Design', description: 'This website showcases some of my design skills.' },
+  { title: 'Mobile App Development', description: 'Still learning, but I do take ideas.' },
 ]
 
 export default function Services() {

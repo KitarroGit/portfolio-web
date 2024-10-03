@@ -15,7 +15,7 @@ export default function About() {
           Hi, I'm Denis Ogarenko. I'm a passionate web and AI developer with some expertise in React, Node.js, JavaScript, Python, etc.
         </p>
         <p className="mb-4">
-          I found passion in coding when I was 13, always tried to make it fun for myself and make sure my clients feel satisfied with their product.
+        My passion for coding began when I was 13 years old when I made my first HTML-based chess game. This experience ignited a lifelong love of technology and programming. Today I make aesthetic, efficient products for my clients.
         </p>
       </div>
     </motion.div>

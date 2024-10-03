@@ -5,11 +5,11 @@ import AIproject2Gif from '../images/AIproject2.gif'
 const projects = [
   {
     title: 'Vehicular Incident Prediction System',
-    description: 'A project I worked on with my groupmates using Toronto Police data, trained a model that could point out streets that were more vulnerable to vehicular incidents',
+    description: 'A project I worked on with my groupmates using Toronto Police data, trained a model that could point out streets that were more vulnerable to vehicular incidents.',
     gif: AIproject2Gif
   },
-  { title: 'NDA project', description: 'Some project I am working on with a group of friends' },
-  { title: 'This website', description: "I've spent way too much time on this website and might as well continue developing it afterwards" },
+  { title: 'NDA project', description: 'Some project I am working on with a group of friends.' },
+  { title: 'This website', description: "I've spent way too much time on this website and might as well continue developing it afterwards." },
 ]
 
 export default function Projects() {
