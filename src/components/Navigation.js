@@ -1,5 +1,5 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState, useEffect, useRef } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Mountain } from 'lucide-react'
 
 const navItems = [
@@ -11,19 +11,58 @@ const navItems = [
 ]
 
 export default function Navigation({ isVisible }) {
+  const [hoveredIndex, setHoveredIndex] = useState(null)
+  const buttonRefs = useRef([])
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      buttonRefs.current.forEach((button, index) => {
+        if (button && hoveredIndex === index) {
+          const rect = button.getBoundingClientRect()
+          const x = e.clientX - rect.left
+          const y = e.clientY - rect.top
+          button.style.setProperty('--mouse-x', `${x}px`)
+          button.style.setProperty('--mouse-y', `${y}px`)
+        }
+      })
+    }
+
+    window.addEventListener('mousemove', handleMouseMove)
+    return () => window.removeEventListener('mousemove', handleMouseMove)
+  }, [hoveredIndex])
+
+  const handleNavClick = (path) => {
+    navigate(path)
+  }
+
   return (
-    <nav className={`fixed left-0 top-0 h-full w-64 backdrop-blur-xl transition-all duration-300 ease-in-out ${isVisible ? 'translate-x-0' : '-translate-x-full'}`}>
+    <nav className={`fixed left-0 top-0 h-full w-64 bg-black/50 backdrop-blur-md z-50 transition-transform duration-300 ease-in-out ${isVisible ? 'translate-x-0' : '-translate-x-full'}`}>
       <div className="p-6 h-full flex flex-col relative">
         <Logo />
         <ul className="flex-grow flex flex-col justify-center items-center space-y-4">
-          {navItems.map((item) => (
+          {navItems.map((item, index) => (
             <li key={item.name} className="w-full">
-              <Link 
-                to={item.path} 
-                className="flex items-center justify-center w-full py-3 px-4 rounded-full bg-purple-600/5 backdrop-blur-3xl border border-purple-800/50 shadow-[0_0_15px_rgba(88,28,135,0.3)] text-white text-center transition-all duration-300 hover:bg-purple-600/10 hover:border-purple-700/70 hover:shadow-[0_0_20px_rgba(88,28,135,0.5)]"
+              <button 
+                onClick={() => handleNavClick(item.path)}
+                onMouseEnter={() => setHoveredIndex(index)}
+                onMouseLeave={() => setHoveredIndex(null)}
+                ref={el => buttonRefs.current[index] = el}
+                className={`relative flex items-center justify-center w-full py-3 px-4 rounded-full border shadow-[0_0_15px_rgba(88,28,135,0.3)] text-white text-center transition-all duration-300 hover:bg-purple-600/20 hover:border-purple-600 hover:shadow-[0_0_25px_rgba(147,51,234,0.5)] hover:scale-105 group cursor-pointer
+                  ${location.pathname === item.path 
+                    ? 'bg-purple-600/20 border-purple-600' 
+                    : 'bg-purple-600/5 border-purple-800/50'}`}
               >
-                {item.name}
-              </Link>
+                <span className="relative z-10">{item.name}</span>
+                <div 
+                  className="absolute inset-0 rounded-full overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  style={{
+                    background: hoveredIndex === index ? 'radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(147, 51, 234, 0.4) 0%, rgba(147, 51, 234, 0) 50%)' : 'none',
+                    mixBlendMode: 'plus-lighter'
+                  }}
+                />
+              </button>
             </li>
           ))}
         </ul>
@@ -35,7 +74,7 @@ export default function Navigation({ isVisible }) {
 
 function Logo() {
   return (
-    <div className="text-3xl font-bold text-purple-600 flex items-center justify-center mb-8">
+    <div className="text-3xl font-bold text-purple-400 flex items-center justify-center mb-8">
       <Mountain className="w-8 h-8 mr-2" />
       <span>MyLogo</span>
     </div>
