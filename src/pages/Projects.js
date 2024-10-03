@@ -1,10 +1,15 @@
 import React from 'react'
 import { motion } from 'framer-motion'
+import AIproject2Gif from '../images/AIproject2.gif'
 
 const projects = [
-  { title: 'Vehicular Incident Prediction System', description: 'A project I worked on with my groupmates using Toronto Polices data, trained a model that could point out streets that were more vulnerable to vehicular incidents' },
+  {
+    title: 'Vehicular Incident Prediction System',
+    description: 'A project I worked on with my groupmates using Toronto Police data, trained a model that could point out streets that were more vulnerable to vehicular incidents',
+    gif: AIproject2Gif
+  },
   { title: 'NDA project', description: 'Some project I am working on with a group of friends' },
-  { title: 'This website', description: 'Ive spent way too much time on this website and might as well continue developing it afterwards' },
+  { title: 'This website', description: "I've spent way too much time on this website and might as well continue developing it afterwards" },
 ]
 
 export default function Projects() {
@@ -24,10 +29,19 @@ export default function Projects() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="bg-purple-900 bg-opacity-20 p-6 rounded-lg"
+              className="bg-purple-900 bg-opacity-20 p-6 rounded-lg flex flex-col"
             >
+              {project.gif && (
+                <div className="mb-4 relative w-full h-48 overflow-hidden rounded-lg">
+                  <img
+                    src={project.gif}
+                    alt={project.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
               <h2 className="text-2xl font-semibold mb-2">{project.title}</h2>
-              <p>{project.description}</p>
+              <p className="flex-grow">{project.description}</p>
             </motion.div>
           ))}
         </div>

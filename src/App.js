@@ -4,6 +4,7 @@ import Navigation from './components/Navigation'
 import LevelSystem from './components/LevelSystem'
 import WavyBubbleRivers from './components/WavyBubbleRivers'
 import SidebarPoke from './components/SidebarPoke'
+import './styles/global.css'
 
 export default function App() {
   const [isNavVisible, setIsNavVisible] = useState(false)
