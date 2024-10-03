@@ -1,3 +1,8 @@
+// File name: WavyBubbleRivers.js
+// Student's Name: Denis Ogarenko
+// StudentID: 301277093
+// Date: 2024-10-03
+
 import React, { useEffect, useRef } from 'react'
 
 const BUBBLE_COLORS = ['#4B0082', '#8A2BE2', '#9400D3', '#9932CC', '#BA55D3']

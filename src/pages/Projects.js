@@ -1,3 +1,8 @@
+// File name: Projects.js
+// Student's Name: Denis Ogarenko
+// StudentID: 301277093
+// Date: 2024-10-03
+
 import React from 'react'
 import { motion } from 'framer-motion'
 import AIproject2Gif from '../images/AIproject2.gif'

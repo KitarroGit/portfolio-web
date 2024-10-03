@@ -1,3 +1,8 @@
+// File name: LevelSystem.js
+// Student's Name: Denis Ogarenko
+// StudentID: 301277093
+// Date: 2024-10-03
+
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useLocation, useNavigate } from 'react-router-dom'

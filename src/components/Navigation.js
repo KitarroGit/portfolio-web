@@ -1,3 +1,8 @@
+// File name: Navigation.js
+// Student's Name: Denis Ogarenko
+// StudentID: 301277093
+// Date: 2024-10-03
+
 import React, { useState, useEffect, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Mountain } from 'lucide-react'

@@ -1,3 +1,8 @@
+// File name: App.js
+// Student's Name: Denis Ogarenko
+// StudentID: 301277093
+// Date: 2024-10-03
+
 import React, { useState, useEffect, useCallback } from 'react'
 import { BrowserRouter as Router } from 'react-router-dom'
 import Navigation from './components/Navigation'
