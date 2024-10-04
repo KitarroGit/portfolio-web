@@ -19,7 +19,6 @@ export default function Contact() {
 
   const handleDocumentationClick = (e) => {
     e.preventDefault()
-    // Assuming the PDF is in the public folder
     const pdfUrl = `${process.env.PUBLIC_URL}/internal_documentation.pdf`
     window.open(pdfUrl, '_blank', 'noopener,noreferrer')
   }

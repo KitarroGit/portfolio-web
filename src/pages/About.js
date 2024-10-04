@@ -8,7 +8,6 @@ import { motion } from 'framer-motion'
 
 export default function About() {
   const handleResumeClick = () => {
-    // Assuming the PDF is in the public folder
     const pdfUrl = `${process.env.PUBLIC_URL}/resume.pdf`
     window.open(pdfUrl, '_blank', 'noopener,noreferrer')
   }
