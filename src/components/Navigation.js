@@ -26,31 +26,15 @@ export default function Navigation({ isVisible, forceOpen, onHover }) {
   const { isDarkMode, toggleTheme } = useTheme()
 
   useEffect(() => {
-    const handleMouseMove = (e) => {
-      buttonRefs.current.forEach((button, index) => {
-        if (button && hoveredIndex === index) {
-          const rect = button.getBoundingClientRect()
-          const x = e.clientX - rect.left
-          const y = e.clientY - rect.top
-          button.style.setProperty('--mouse-x', `${x}px`)
-          button.style.setProperty('--mouse-y', `${y}px`)
-        }
-      })
-    }
-
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [hoveredIndex])
-
-  useEffect(() => {
+    let timer
     if (forceOpen) {
-      const timer = setTimeout(() => {
+      timer = setTimeout(() => {
         setHighlightAll(true)
-      }, 1000)
-      return () => clearTimeout(timer)
+      }, 500)
     } else {
       setHighlightAll(false)
     }
+    return () => clearTimeout(timer)
   }, [forceOpen])
 
   const handleNavClick = (path) => {
@@ -59,8 +43,22 @@ export default function Navigation({ isVisible, forceOpen, onHover }) {
 
   const handleButtonHover = (index) => {
     setHoveredIndex(index)
-    setHighlightAll(false)
-    onHover()
+    const button = buttonRefs.current[index]
+    if (button) {
+      button.style.setProperty('--mouse-x', '50%')
+      button.style.setProperty('--mouse-y', '50%')
+    }
+  }
+
+  const handleButtonMove = (e, index) => {
+    const button = buttonRefs.current[index]
+    if (button) {
+      const rect = button.getBoundingClientRect()
+      const x = e.clientX - rect.left
+      const y = e.clientY - rect.top
+      button.style.setProperty('--mouse-x', `${x}px`)
+      button.style.setProperty('--mouse-y', `${y}px`)
+    }
   }
 
   return (
@@ -76,15 +74,16 @@ export default function Navigation({ isVisible, forceOpen, onHover }) {
               <button 
                 onClick={() => handleNavClick(item.path)}
                 onMouseEnter={() => handleButtonHover(index)}
+                onMouseMove={(e) => handleButtonMove(e, index)}
                 onMouseLeave={() => setHoveredIndex(null)}
                 ref={el => buttonRefs.current[index] = el}
-                className={`relative flex items-center justify-center w-full py-3 px-4 rounded-full border ${isDarkMode ? 'shadow-[0_0_15px_rgba(88,28,135,0.3)]' : 'shadow-[0_0_15px_rgba(88,28,135,0.15)]'} text-center transition-all duration-300 hover:bg-purple-600/20 hover:border-purple-600 ${isDarkMode ? 'hover:shadow-[0_0_25px_rgba(147,51,234,0.5)]' : 'hover:shadow-[0_0_25px_rgba(147,51,234,0.25)]'} hover:scale-105 group cursor-pointer
+                className={`relative flex items-center justify-center w-full py-3 px-4 rounded-full border ${isDarkMode ? 'shadow-[0_0_15px_rgba(88,28,135,0.3)]' : 'shadow-[0_0_15px_rgba(88,28,135,0.15)]'} text-center hover:bg-purple-600/20 hover:border-purple-600 ${isDarkMode ? 'hover:shadow-[0_0_25px_rgba(147,51,234,0.5)]' : 'hover:shadow-[0_0_25px_rgba(147,51,234,0.25)]'} hover:scale-105 group cursor-pointer
                   ${location.pathname === item.path 
                     ? 'bg-purple-600/20 border-purple-600' 
                     : 'bg-purple-600/5 border-purple-800/50'}
                   ${highlightAll && hoveredIndex === null ? 'bg-purple-600/40 border-purple-400 shadow-[0_0_25px_rgba(147,51,234,0.7)]' : ''}`}
               >
-                <span className="relative z-10">{item.name}</span>
+                <span className={`relative z-10 ${isDarkMode ? 'text-white' : 'text-black'}`}>{item.name}</span>
                 <div 
                   className="absolute inset-0 rounded-full overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                   style={{
@@ -98,39 +97,21 @@ export default function Navigation({ isVisible, forceOpen, onHover }) {
         </ul>
         <button
           onClick={toggleTheme}
-          className={`mt-4 p-2 rounded-full ${isDarkMode ? 'bg-white text-black' : 'bg-black text-white'} hover:opacity-80 transition-opacity`}
+          className={`mt-4 p-2 rounded-full ${isDarkMode ? 'bg-white text-black' : 'bg-black text-white'} hover:opacity-80 w-10 h-10 flex items-center justify-center`}
+          aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
         >
-          {isDarkMode ? <Sun size={24} /> : <Moon size={24} />}
+          {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
         </button>
-        <div className={`absolute top-0 right-0 w-px h-full ${isDarkMode ? 'bg-purple-900' : 'bg-purple-300'} transition-all duration-300 ${isVisible ? `shadow-[0_0_8px_1px_${isDarkMode ? 'rgba(88,28,135,0.5)' : 'rgba(147,51,234,0.3)'}] ${isDarkMode ? 'shadow-purple-900' : 'shadow-purple-300'}` : 'shadow-none'}`}></div>
+        <div className={`absolute top-0 right-0 w-px h-full ${isDarkMode ? 'bg-purple-900' : 'bg-purple-300'} ${isVisible ? `shadow-[0_0_8px_1px_${isDarkMode ? 'rgba(88,28,135,0.5)' : 'rgba(147,51,234,0.3)'}] ${isDarkMode ? 'shadow-purple-900' : 'shadow-purple-300'}` : 'shadow-none'}`}></div>
       </div>
     </nav>
   )
 }
 
 function Logo() {
-  const [imageError, setImageError] = useState(false)
-  const { isDarkMode } = useTheme()
-
-  const handleImageError = () => {
-    console.error('Failed to load logo image')
-    setImageError(true)
-  }
-
   return (
-    <div className={`text-3xl font-bold ${isDarkMode ? 'text-purple-400' : 'text-purple-600'} flex items-center justify-center mb-8`}>
-      {!imageError ? (
-        <img 
-          src={logoImage} 
-          alt="DO Logo" 
-          className="w-16 h-16" 
-          onError={handleImageError}
-        />
-      ) : (
-        <div className={`w-16 h-16 ${isDarkMode ? 'bg-purple-600' : 'bg-purple-400'} flex items-center justify-center rounded-full`}>
-          <span className={isDarkMode ? 'text-white' : 'text-black'}>DO</span>
-        </div>
-      )}
+    <div className="mb-6">
+      <img src={logoImage} alt="Logo" className="w-16 h-16 mx-auto" />
     </div>
   )
 }

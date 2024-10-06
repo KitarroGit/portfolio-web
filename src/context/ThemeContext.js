@@ -22,14 +22,16 @@ export const ThemeProvider = ({ children }) => {
   }, [])
 
   const toggleTheme = () => {
-    const newTheme = !isDarkMode
-    setIsDarkMode(newTheme)
-    localStorage.setItem('theme', newTheme ? 'dark' : 'light')
-    if (newTheme) {
-      document.documentElement.classList.remove('light-mode')
-    } else {
-      document.documentElement.classList.add('light-mode')
-    }
+    setIsDarkMode(prevMode => {
+      const newMode = !prevMode
+      localStorage.setItem('theme', newMode ? 'dark' : 'light')
+      if (newMode) {
+        document.documentElement.classList.remove('light-mode')
+      } else {
+        document.documentElement.classList.add('light-mode')
+      }
+      return newMode
+    })
   }
 
   return (

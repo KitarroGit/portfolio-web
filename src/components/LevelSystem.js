@@ -73,7 +73,7 @@ export default function LevelSystem({ onExploreClick }) {
   }
 
   return (
-    <div className="h-screen overflow-hidden">
+    <div className={`h-screen overflow-hidden ${isDarkMode ? 'text-white' : 'text-black'}`}>
       <AnimatePresence initial={false} custom={direction} mode="wait">
         <motion.div
           key={location.pathname}
