@@ -8,12 +8,15 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^29.5.13",
+    "cookie": "^0.7.1",
     "framer-motion": "^11.9.0",
     "lucide-react": "^0.447.0",
+    "nth-check": "^2.1.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.2",
     "react-scripts": "^5.0.1",
+    "react-swipeable": "^7.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

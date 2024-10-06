@@ -6,6 +6,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { useSwipeable } from 'react-swipeable'
 import Home from '../pages/Home'
 import About from '../pages/About'
 import Projects from '../pages/Projects'
@@ -28,6 +29,7 @@ export default function LevelSystem({ onExploreClick }) {
   const [direction, setDirection] = useState(0)
   const isScrollingRef = useRef(false)
   const { isDarkMode } = useTheme()
+  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
     const index = pages.findIndex(page => page.path === location.pathname)
@@ -35,27 +37,51 @@ export default function LevelSystem({ onExploreClick }) {
   }, [location])
 
   useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768) // Adjust this breakpoint as needed
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
+  const handleNavigation = (delta) => {
+    if (isScrollingRef.current) return
+
+    isScrollingRef.current = true
+
+    const newIndex = currentIndex + delta
+    if (newIndex >= 0 && newIndex < pages.length) {
+      setDirection(delta)
+      navigate(pages[newIndex].path)
+    }
+
+    setTimeout(() => {
+      isScrollingRef.current = false
+    }, 1000) // 1 second cooldown between page changes
+  }
+
+  useEffect(() => {
     const handleWheel = (e) => {
-      if (isScrollingRef.current) return
-
-      isScrollingRef.current = true
-
-      if (e.deltaY > 0 && currentIndex < pages.length - 1) {
-        setDirection(1)
-        navigate(pages[currentIndex + 1].path)
-      } else if (e.deltaY < 0 && currentIndex > 0) {
-        setDirection(-1)
-        navigate(pages[currentIndex - 1].path)
+      if (e.deltaY > 0) {
+        handleNavigation(1)
+      } else if (e.deltaY < 0) {
+        handleNavigation(-1)
       }
-
-      setTimeout(() => {
-        isScrollingRef.current = false
-      }, 1000) // 1 second cooldown between page changes
     }
 
     window.addEventListener('wheel', handleWheel)
     return () => window.removeEventListener('wheel', handleWheel)
   }, [currentIndex, navigate])
+
+  const handlers = useSwipeable({
+    onSwipedLeft: () => isMobile && handleNavigation(1),
+    onSwipedRight: () => isMobile && handleNavigation(-1),
+    onSwipedUp: () => isMobile && handleNavigation(1),
+    onSwipedDown: () => isMobile && handleNavigation(-1),
+    preventDefaultTouchmoveEvent: true,
+    trackMouse: false // Disable mouse tracking
+  })
 
   const variants = {
     enter: (direction) => ({
@@ -73,7 +99,10 @@ export default function LevelSystem({ onExploreClick }) {
   }
 
   return (
-    <div className={`h-screen overflow-hidden ${isDarkMode ? 'text-white' : 'text-black'}`}>
+    <div 
+      className={`h-screen overflow-hidden ${isDarkMode ? 'text-white' : 'text-black'}`}
+      {...(isMobile ? handlers : {})}
+    >
       <AnimatePresence initial={false} custom={direction} mode="wait">
         <motion.div
           key={location.pathname}
