@@ -3,7 +3,7 @@
 // StudentID: 301277093
 // Date: 2024-10-03
 
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useSwipeable } from 'react-swipeable'
@@ -45,7 +45,7 @@ export default function LevelSystem({ onExploreClick }) {
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
-  const handleNavigation = (delta) => {
+  const handleNavigation = useCallback((delta) => {
     if (isScrollingRef.current) return
 
     isScrollingRef.current = true
@@ -59,7 +59,7 @@ export default function LevelSystem({ onExploreClick }) {
     setTimeout(() => {
       isScrollingRef.current = false
     }, 1000) // 1 second cooldown between page changes
-  }
+  }, [currentIndex, navigate])
 
   useEffect(() => {
     const handleWheel = (e) => {
@@ -72,7 +72,7 @@ export default function LevelSystem({ onExploreClick }) {
 
     window.addEventListener('wheel', handleWheel)
     return () => window.removeEventListener('wheel', handleWheel)
-  }, [currentIndex, navigate])
+  }, [handleNavigation])
 
   const handlers = useSwipeable({
     onSwipedLeft: () => isMobile && handleNavigation(1),
