@@ -3,23 +3,24 @@
 // StudentID: 301277093
 // Date: 2024-10-03
 
-import React, { useState, useEffect, useCallback } from 'react'
-import { BrowserRouter as Router } from 'react-router-dom'
+import React from 'react'
+import { HashRouter as Router } from 'react-router-dom'
+import { ThemeProvider } from './context/ThemeContext'
 import Navigation from './components/Navigation'
 import LevelSystem from './components/LevelSystem'
 import WavyBubbleRivers from './components/WavyBubbleRivers'
 import SidebarPoke from './components/SidebarPoke'
-import { ThemeProvider, useTheme } from './context/ThemeContext'
+import { useTheme } from './context/ThemeContext'
 import './styles/global.css'
 
 function AppContent() {
-  const [isNavVisible, setIsNavVisible] = useState(false)
-  const [showPoke, setShowPoke] = useState(true)
-  const [forceNavOpen, setForceNavOpen] = useState(false)
-  const [hasUserHoveredNav, setHasUserHoveredNav] = useState(false)
+  const [isNavVisible, setIsNavVisible] = React.useState(false)
+  const [showPoke, setShowPoke] = React.useState(true)
+  const [forceNavOpen, setForceNavOpen] = React.useState(false)
+  const [hasUserHoveredNav, setHasUserHoveredNav] = React.useState(false)
   const { isDarkMode, isInitialized } = useTheme()
 
-  useEffect(() => {
+  React.useEffect(() => {
     const handleMouseMove = (e) => {
       if (e.clientX < 20) {
         setIsNavVisible(true)
@@ -36,7 +37,7 @@ function AppContent() {
     return () => window.removeEventListener('mousemove', handleMouseMove)
   }, [forceNavOpen, hasUserHoveredNav])
 
-  const handleExploreClick = useCallback(() => {
+  const handleExploreClick = React.useCallback(() => {
     setForceNavOpen(true)
     setIsNavVisible(true)
     setShowPoke(false)
@@ -53,7 +54,7 @@ function AppContent() {
     return () => clearTimeout(timer)
   }, [hasUserHoveredNav])
 
-  const handleNavHover = useCallback(() => {
+  const handleNavHover = React.useCallback(() => {
     setHasUserHoveredNav(true)
     if (forceNavOpen) {
       setForceNavOpen(false)
