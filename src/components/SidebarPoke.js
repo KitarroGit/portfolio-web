@@ -6,9 +6,11 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronRight } from 'lucide-react'
+import { useTheme } from '../context/ThemeContext'
 
 export default function SidebarPoke({ isVisible }) {
   const [isMoving, setIsMoving] = useState(false)
+  const { isDarkMode } = useTheme()
 
   useEffect(() => {
     if (isVisible) {
@@ -23,7 +25,7 @@ export default function SidebarPoke({ isVisible }) {
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          className="fixed left-0 top-1/2 -translate-y-1/2 z-50"
+          className={`fixed left-0 top-1/2 -translate-y-1/2 z-50 ${isDarkMode ? 'text-purple-400' : 'text-purple-600'}`}
           initial={{ x: 0, filter: 'blur(0px)', opacity: 1 }}
           animate={isMoving ? { x: [0, 10, 0] } : {}}
           exit={{ filter: 'blur(10px)', opacity: 0 }}
@@ -38,7 +40,7 @@ export default function SidebarPoke({ isVisible }) {
             opacity: { duration: 1, ease: 'easeInOut' }
           }}
         >
-          <ChevronRight size={24} className="text-purple-400" />
+          <ChevronRight size={24} />
         </motion.div>
       )}
     </AnimatePresence>

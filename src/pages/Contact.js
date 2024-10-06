@@ -5,9 +5,11 @@
 
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { useTheme } from '../context/ThemeContext'
 
 export default function Contact() {
   const [showDocButton, setShowDocButton] = useState(false)
+  const { isDarkMode } = useTheme()
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -28,7 +30,7 @@ export default function Contact() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="h-full flex items-center justify-center text-white p-8 relative"
+      className={`h-full flex items-center justify-center ${isDarkMode ? 'text-white' : 'text-black'} p-8 relative`}
     >
       <div className="max-w-4xl w-full">
         <h1 className="text-4xl font-bold mb-8 text-center">Contact Me</h1>
@@ -36,19 +38,19 @@ export default function Contact() {
           <div>
             <label htmlFor="name" className="block text-sm font-medium mb-2">Name</label>
             <input type="text" id="name" name="name" required
-              className="w-full px-3 py-2 bg-purple-900 bg-opacity-50 rounded-md border border-purple-500 focus:border-purple-300 focus:ring focus:ring-purple-200 focus:ring-opacity-50"
+              className={`w-full px-3 py-2 ${isDarkMode ? 'bg-purple-900 bg-opacity-50' : 'bg-purple-100'} rounded-md border ${isDarkMode ? 'border-purple-500' : 'border-purple-300'} focus:border-purple-300 focus:ring focus:ring-purple-200 focus:ring-opacity-50`}
             />
           </div>
           <div>
             <label htmlFor="email" className="block text-sm font-medium mb-2">Email</label>
             <input type="email" id="email" name="email" required
-              className="w-full px-3 py-2 bg-purple-900 bg-opacity-50 rounded-md border border-purple-500 focus:border-purple-300 focus:ring focus:ring-purple-200 focus:ring-opacity-50"
+              className={`w-full px-3 py-2 ${isDarkMode ? 'bg-purple-900 bg-opacity-50' : 'bg-purple-100'} rounded-md border ${isDarkMode ? 'border-purple-500' : 'border-purple-300'} focus:border-purple-300 focus:ring focus:ring-purple-200 focus:ring-opacity-50`}
             />
           </div>
           <div>
             <label htmlFor="message" className="block text-sm font-medium mb-2">Message</label>
             <textarea id="message" name="message" rows="4" required
-              className="w-full px-3 py-2 bg-purple-900 bg-opacity-50 rounded-md border border-purple-500 focus:border-purple-300 focus:ring focus:ring-purple-200 focus:ring-opacity-50"
+              className={`w-full px-3 py-2 ${isDarkMode ? 'bg-purple-900 bg-opacity-50' : 'bg-purple-100'} rounded-md border ${isDarkMode ? 'border-purple-500' : 'border-purple-300'} focus:border-purple-300 focus:ring focus:ring-purple-200 focus:ring-opacity-50`}
             ></textarea>
           </div>
           <div>
@@ -65,7 +67,7 @@ export default function Contact() {
         animate={{ opacity: showDocButton ? 1 : 0 }}
         transition={{ duration: 0.5 }}
         onClick={handleDocumentationClick}
-        className="absolute bottom-4 right-4 px-4 py-2 rounded-full border shadow-[0_0_15px_rgba(88,28,135,0.3)] text-white text-center transition-all duration-300 hover:bg-purple-600/20 hover:border-purple-600 hover:shadow-[0_0_25px_rgba(147,51,234,0.5)] hover:scale-105 bg-purple-600/5 border-purple-800/50"
+        className={`absolute bottom-4 right-4 px-4 py-2 rounded-full border ${isDarkMode ? 'shadow-[0_0_15px_rgba(88,28,135,0.3)]' : 'shadow-[0_0_15px_rgba(88,28,135,0.15)]'} ${isDarkMode ? 'text-white' : 'text-black'} text-center transition-all duration-300 hover:bg-purple-600/20 hover:border-purple-600 ${isDarkMode ? 'hover:shadow-[0_0_25px_rgba(147,51,234,0.5)]' : 'hover:shadow-[0_0_25px_rgba(147,51,234,0.25)]'} hover:scale-105 ${isDarkMode ? 'bg-purple-600/5' : 'bg-purple-100'} ${isDarkMode ? 'border-purple-800/50' : 'border-purple-300'}`}
       >
         Internal Documentation
       </motion.button>

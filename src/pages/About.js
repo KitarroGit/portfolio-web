@@ -5,8 +5,11 @@
 
 import React from 'react'
 import { motion } from 'framer-motion'
+import { useTheme } from '../context/ThemeContext'
 
 export default function About() {
+  const { isDarkMode } = useTheme()
+
   const handleResumeClick = () => {
     const pdfUrl = `${process.env.PUBLIC_URL}/resume.pdf`
     window.open(pdfUrl, '_blank', 'noopener,noreferrer')
@@ -17,7 +20,7 @@ export default function About() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="h-full flex items-center justify-center text-white p-8"
+      className={`h-full flex items-center justify-center ${isDarkMode ? 'text-white' : 'text-black'} p-8`}
     >
       <div className="max-w-2xl text-center">
         <h1 className="text-4xl font-bold mb-6">About Me</h1>

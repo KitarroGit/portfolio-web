@@ -5,6 +5,7 @@
 
 import React from 'react'
 import { motion } from 'framer-motion'
+import { useTheme } from '../context/ThemeContext'
 
 const services = [
   { title: 'Web Development', description: 'Custom website development.' },
@@ -13,12 +14,14 @@ const services = [
 ]
 
 export default function Services() {
+  const { isDarkMode } = useTheme()
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="h-full flex items-center justify-center text-white p-8"
+      className={`h-full flex items-center justify-center ${isDarkMode ? 'text-white' : 'text-black'} p-8`}
     >
       <div className="max-w-4xl">
         <h1 className="text-4xl font-bold mb-8 text-center">My Services</h1>
@@ -29,7 +32,7 @@ export default function Services() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="bg-purple-900 bg-opacity-20 p-6 rounded-lg"
+              className={`${isDarkMode ? 'bg-purple-900 bg-opacity-20' : 'bg-purple-100'} p-6 rounded-lg`}
             >
               <h2 className="text-2xl font-semibold mb-2">{service.title}</h2>
               <p>{service.description}</p>

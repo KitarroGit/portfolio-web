@@ -11,6 +11,7 @@ import About from '../pages/About'
 import Projects from '../pages/Projects'
 import Services from '../pages/Services'
 import Contact from '../pages/Contact'
+import { useTheme } from '../context/ThemeContext'
 
 const pages = [
   { path: '/', component: Home },
@@ -26,6 +27,7 @@ export default function LevelSystem({ onExploreClick }) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [direction, setDirection] = useState(0)
   const isScrollingRef = useRef(false)
+  const { isDarkMode } = useTheme()
 
   useEffect(() => {
     const index = pages.findIndex(page => page.path === location.pathname)

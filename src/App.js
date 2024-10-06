@@ -9,13 +9,15 @@ import Navigation from './components/Navigation'
 import LevelSystem from './components/LevelSystem'
 import WavyBubbleRivers from './components/WavyBubbleRivers'
 import SidebarPoke from './components/SidebarPoke'
+import { ThemeProvider, useTheme } from './context/ThemeContext'
 import './styles/global.css'
 
-export default function App() {
+function AppContent() {
   const [isNavVisible, setIsNavVisible] = useState(false)
   const [showPoke, setShowPoke] = useState(true)
   const [forceNavOpen, setForceNavOpen] = useState(false)
   const [hasUserHoveredNav, setHasUserHoveredNav] = useState(false)
+  const { isDarkMode } = useTheme()
 
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -40,7 +42,6 @@ export default function App() {
     setShowPoke(false)
     setHasUserHoveredNav(false)
     
-    // Set a timeout to hide the nav bar after 10 seconds if the user hasn't hovered over it
     const timer = setTimeout(() => {
       if (!hasUserHoveredNav) {
         setForceNavOpen(false)
@@ -59,25 +60,41 @@ export default function App() {
     }
   }, [forceNavOpen])
 
+  useEffect(() => {
+    if (isDarkMode) {
+      document.body.classList.remove('light-mode')
+    } else {
+      document.body.classList.add('light-mode')
+    }
+  }, [isDarkMode])
+
   return (
-    <Router>
-      <div className="relative min-h-screen overflow-hidden">
-        <WavyBubbleRivers />
-        <div className="relative z-10 min-h-screen">
-          <div className="absolute inset-0 backdrop-blur-sm bg-black/10" />
-          <div className="relative z-20 flex min-h-screen">
-            <Navigation 
-              isVisible={isNavVisible || forceNavOpen} 
-              forceOpen={forceNavOpen}
-              onHover={handleNavHover}
-            />
-            <main className="flex-1">
-              <LevelSystem onExploreClick={handleExploreClick} />
-            </main>
-          </div>
+    <div className={`relative min-h-screen overflow-hidden`}>
+      <WavyBubbleRivers isDarkMode={isDarkMode} />
+      <div className="relative z-10 min-h-screen">
+        <div className={`absolute inset-0 backdrop-blur-sm ${isDarkMode ? 'bg-black/10' : 'bg-white/10'}`} />
+        <div className="relative z-20 flex min-h-screen">
+          <Navigation 
+            isVisible={isNavVisible || forceNavOpen} 
+            forceOpen={forceNavOpen}
+            onHover={handleNavHover}
+          />
+          <main className="flex-1">
+            <LevelSystem onExploreClick={handleExploreClick} />
+          </main>
         </div>
-        <SidebarPoke isVisible={!isNavVisible && !forceNavOpen && showPoke} />
       </div>
-    </Router>
+      <SidebarPoke isVisible={!isNavVisible && !forceNavOpen && showPoke} isDarkMode={isDarkMode} />
+    </div>
+  )
+}
+
+export default function App() {
+  return (
+    <ThemeProvider>
+      <Router>
+        <AppContent />
+      </Router>
+    </ThemeProvider>
   )
 }

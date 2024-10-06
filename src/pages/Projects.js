@@ -5,6 +5,7 @@
 
 import React from 'react'
 import { motion } from 'framer-motion'
+import { useTheme } from '../context/ThemeContext'
 import AIproject2Gif from '../images/AIproject2.gif'
 
 const projects = [
@@ -18,12 +19,14 @@ const projects = [
 ]
 
 export default function Projects() {
+  const { isDarkMode } = useTheme()
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="h-full flex items-center justify-center text-white p-8"
+      className={`h-full flex items-center justify-center ${isDarkMode ? 'text-white' : 'text-black'} p-8`}
     >
       <div className="max-w-4xl">
         <h1 className="text-4xl font-bold mb-8 text-center">My Projects</h1>
@@ -34,7 +37,7 @@ export default function Projects() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="bg-purple-900 bg-opacity-20 p-6 rounded-lg flex flex-col"
+              className={`${isDarkMode ? 'bg-purple-900 bg-opacity-20' : 'bg-purple-100'} p-6 rounded-lg flex flex-col`}
             >
               {project.gif && (
                 <div className="mb-4 relative w-full h-48 overflow-hidden rounded-lg">

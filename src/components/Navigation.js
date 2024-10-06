@@ -5,7 +5,9 @@
 
 import React, { useState, useEffect, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import logoImage from '../images/Logo.png' // Updated import path
+import { useTheme } from '../context/ThemeContext'
+import logoImage from '../images/Logo.png'
+import { Sun, Moon } from 'lucide-react'
 
 const navItems = [
   { name: 'Home', path: '/' },
@@ -21,6 +23,7 @@ export default function Navigation({ isVisible, forceOpen, onHover }) {
   const buttonRefs = useRef([])
   const location = useLocation()
   const navigate = useNavigate()
+  const { isDarkMode, toggleTheme } = useTheme()
 
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -62,7 +65,7 @@ export default function Navigation({ isVisible, forceOpen, onHover }) {
 
   return (
     <nav 
-      className={`fixed left-0 top-0 h-full w-64 bg-black/50 backdrop-blur-md z-50 transition-transform duration-300 ease-in-out ${isVisible ? 'translate-x-0' : '-translate-x-full'}`}
+      className={`fixed left-0 top-0 h-full w-64 ${isDarkMode ? 'bg-black/50' : 'bg-white/50'} backdrop-blur-md z-50 transition-transform duration-300 ease-in-out ${isVisible ? 'translate-x-0' : '-translate-x-full'}`}
       onMouseEnter={onHover}
     >
       <div className="p-6 h-full flex flex-col relative">
@@ -75,7 +78,7 @@ export default function Navigation({ isVisible, forceOpen, onHover }) {
                 onMouseEnter={() => handleButtonHover(index)}
                 onMouseLeave={() => setHoveredIndex(null)}
                 ref={el => buttonRefs.current[index] = el}
-                className={`relative flex items-center justify-center w-full py-3 px-4 rounded-full border shadow-[0_0_15px_rgba(88,28,135,0.3)] text-white text-center transition-all duration-300 hover:bg-purple-600/20 hover:border-purple-600 hover:shadow-[0_0_25px_rgba(147,51,234,0.5)] hover:scale-105 group cursor-pointer
+                className={`relative flex items-center justify-center w-full py-3 px-4 rounded-full border ${isDarkMode ? 'shadow-[0_0_15px_rgba(88,28,135,0.3)]' : 'shadow-[0_0_15px_rgba(88,28,135,0.15)]'} text-center transition-all duration-300 hover:bg-purple-600/20 hover:border-purple-600 ${isDarkMode ? 'hover:shadow-[0_0_25px_rgba(147,51,234,0.5)]' : 'hover:shadow-[0_0_25px_rgba(147,51,234,0.25)]'} hover:scale-105 group cursor-pointer
                   ${location.pathname === item.path 
                     ? 'bg-purple-600/20 border-purple-600' 
                     : 'bg-purple-600/5 border-purple-800/50'}
@@ -85,7 +88,7 @@ export default function Navigation({ isVisible, forceOpen, onHover }) {
                 <div 
                   className="absolute inset-0 rounded-full overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                   style={{
-                    background: hoveredIndex === index ? 'radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(147, 51, 234, 0.4) 0%, rgba(147, 51, 234, 0) 50%)' : 'none',
+                    background: hoveredIndex === index ? `radial-gradient(circle at var(--mouse-x) var(--mouse-y), ${isDarkMode ? 'rgba(147, 51, 234, 0.4)' : 'rgba(147, 51, 234, 0.2)'} 0%, ${isDarkMode ? 'rgba(147, 51, 234, 0)' : 'rgba(147, 51, 234, 0)'} 50%)` : 'none',
                     mixBlendMode: 'plus-lighter'
                   }}
                 />
@@ -93,7 +96,13 @@ export default function Navigation({ isVisible, forceOpen, onHover }) {
             </li>
           ))}
         </ul>
-        <div className={`absolute top-0 right-0 w-px h-full bg-purple-900 transition-all duration-300 ${isVisible ? 'shadow-[0_0_8px_1px_rgba(88,28,135,0.5)] shadow-purple-900' : 'shadow-none'}`}></div>
+        <button
+          onClick={toggleTheme}
+          className={`mt-4 p-2 rounded-full ${isDarkMode ? 'bg-white text-black' : 'bg-black text-white'} hover:opacity-80 transition-opacity`}
+        >
+          {isDarkMode ? <Sun size={24} /> : <Moon size={24} />}
+        </button>
+        <div className={`absolute top-0 right-0 w-px h-full ${isDarkMode ? 'bg-purple-900' : 'bg-purple-300'} transition-all duration-300 ${isVisible ? `shadow-[0_0_8px_1px_${isDarkMode ? 'rgba(88,28,135,0.5)' : 'rgba(147,51,234,0.3)'}] ${isDarkMode ? 'shadow-purple-900' : 'shadow-purple-300'}` : 'shadow-none'}`}></div>
       </div>
     </nav>
   )
@@ -101,6 +110,7 @@ export default function Navigation({ isVisible, forceOpen, onHover }) {
 
 function Logo() {
   const [imageError, setImageError] = useState(false)
+  const { isDarkMode } = useTheme()
 
   const handleImageError = () => {
     console.error('Failed to load logo image')
@@ -108,7 +118,7 @@ function Logo() {
   }
 
   return (
-    <div className="text-3xl font-bold text-purple-400 flex items-center justify-center mb-8">
+    <div className={`text-3xl font-bold ${isDarkMode ? 'text-purple-400' : 'text-purple-600'} flex items-center justify-center mb-8`}>
       {!imageError ? (
         <img 
           src={logoImage} 
@@ -117,8 +127,8 @@ function Logo() {
           onError={handleImageError}
         />
       ) : (
-        <div className="w-16 h-16 bg-purple-600 flex items-center justify-center rounded-full">
-          <span className="text-white">DO</span>
+        <div className={`w-16 h-16 ${isDarkMode ? 'bg-purple-600' : 'bg-purple-400'} flex items-center justify-center rounded-full`}>
+          <span className={isDarkMode ? 'text-white' : 'text-black'}>DO</span>
         </div>
       )}
     </div>
