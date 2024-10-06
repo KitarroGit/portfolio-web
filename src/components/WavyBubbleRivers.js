@@ -3,15 +3,11 @@
 // StudentID: 301277093
 // Date: 2024-10-03
 
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 const BUBBLE_COLORS = ['#4B0082', '#8A2BE2', '#9400D3', '#9932CC', '#BA55D3']
-const RIVER_COUNT = 4
-const BUBBLES_PER_RIVER = 200
 const BASE_RIVER_WIDTH = 360
 const WIDTH_VARIATION = 100
-const MAX_BUBBLE_SIZE = 16.2
-const MIN_BUBBLE_SIZE = 6.2
 const CURSOR_EFFECT_RADIUS = 400
 const MAX_SIZE_INCREASE = 1.5
 const LANE_COUNT = 9
@@ -36,7 +32,7 @@ class Bubble {
     this.targetLane = lane
   }
 
-  update(path, width, mouseX, mouseY) {
+  update(path, width, mouseX, mouseY, isMobile) {
     this.t += this.speed
     if (this.t > 1) this.t -= 1
 
@@ -77,16 +73,18 @@ class Bubble {
   }
 }
 
-function createWavyPath(startX, startY, endX, endY, amplitude, frequency) {
+function createWavyPath(startX, startY, endX, endY, amplitude, frequency, isMobile) {
   return (t) => {
     const x = startX + (endX - startX) * t
-    const y = startY + (endY - startY) * t + Math.sin(t * Math.PI * frequency) * amplitude
+    const y = startY + (endY - startY) * t + (isMobile ? Math.sin(t * Math.PI * frequency) * amplitude * 0.5 : Math.sin(t * Math.PI * frequency) * amplitude)
     return { x, y }
   }
 }
 
-function createWidthFunction() {
-  const points = Array.from({ length: 10 }, () => Math.random() * WIDTH_VARIATION + BASE_RIVER_WIDTH)
+function createWidthFunction(isMobile) {
+  const baseWidth = isMobile ? BASE_RIVER_WIDTH * 0.7 : BASE_RIVER_WIDTH
+  const variation = isMobile ? WIDTH_VARIATION * 0.5 : WIDTH_VARIATION
+  const points = Array.from({ length: 10 }, () => Math.random() * variation + baseWidth)
   return (t) => {
     const index = Math.floor(t * (points.length - 1))
     const nextIndex = Math.min(index + 1, points.length - 1)
@@ -95,11 +93,21 @@ function createWidthFunction() {
   }
 }
 
-export default function WavyBubbleRivers() {
+export default function WavyBubbleRivers({ isDarkMode }) {
   const canvasRef = useRef(null)
   const blurredCanvasRef = useRef(null)
   const rivers = useRef([])
   const mousePos = useRef({ x: 0, y: 0 })
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768)
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -118,6 +126,11 @@ export default function WavyBubbleRivers() {
 
     const initRivers = () => {
       rivers.current = []
+      const RIVER_COUNT = isMobile ? 2 : 4
+      const BUBBLES_PER_RIVER = isMobile ? 150 : 200
+      const MAX_BUBBLE_SIZE = isMobile ? 20 : 16.2
+      const MIN_BUBBLE_SIZE = isMobile ? 10 : 6.2
+
       for (let i = 0; i < RIVER_COUNT; i++) {
         const startX = i % 2 === 0 ? 0 : canvas.width
         const startY = Math.random() * canvas.height
@@ -126,8 +139,8 @@ export default function WavyBubbleRivers() {
         const amplitude = Math.random() * 100 + 50
         const frequency = Math.random() * 2 + 1
 
-        const path = createWavyPath(startX, startY, endX, endY, amplitude, frequency)
-        const widthFunction = createWidthFunction()
+        const path = createWavyPath(startX, startY, endX, endY, amplitude, frequency, isMobile)
+        const widthFunction = createWidthFunction(isMobile)
         const bubbles = []
 
         for (let j = 0; j < BUBBLES_PER_RIVER; j++) {
@@ -154,7 +167,7 @@ export default function WavyBubbleRivers() {
 
       rivers.current.forEach(river => {
         river.bubbles.forEach(bubble => {
-          bubble.update(river.path, river.widthFunction, mousePos.current.x, mousePos.current.y)
+          bubble.update(river.path, river.widthFunction, mousePos.current.x, mousePos.current.y, isMobile)
           bubble.draw(blurredCtx)
         })
       })
@@ -186,7 +199,7 @@ export default function WavyBubbleRivers() {
       window.removeEventListener('resize', resizeCanvas)
       window.removeEventListener('mousemove', handleMouseMove)
     }
-  }, [])
+  }, [isMobile])
 
   return (
     <>

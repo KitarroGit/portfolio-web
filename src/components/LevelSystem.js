@@ -77,8 +77,6 @@ export default function LevelSystem({ onExploreClick }) {
   const handlers = useSwipeable({
     onSwipedLeft: () => isMobile && handleNavigation(1),
     onSwipedRight: () => isMobile && handleNavigation(-1),
-    onSwipedUp: () => isMobile && handleNavigation(1),
-    onSwipedDown: () => isMobile && handleNavigation(-1),
     preventDefaultTouchmoveEvent: true,
     trackMouse: false // Disable mouse tracking
   })
