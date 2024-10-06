@@ -63,7 +63,7 @@ export default function Navigation({ isVisible, forceOpen, onHover }) {
 
   return (
     <nav 
-      className={`fixed left-0 top-0 h-full w-64 ${isDarkMode ? 'bg-black/50' : 'bg-white/50'} backdrop-blur-md z-50 transition-transform duration-300 ease-in-out ${isVisible ? 'translate-x-0' : '-translate-x-full'}`}
+      className={`fixed left-0 top-0 h-full w-64 ${isDarkMode ? 'bg-black/50' : 'bg-white/50'} backdrop-blur-md z-50 transform transition-transform duration-300 ease-in-out ${isVisible ? 'translate-x-0' : '-translate-x-full'}`}
       onMouseEnter={onHover}
     >
       <div className="p-6 h-full flex flex-col relative">

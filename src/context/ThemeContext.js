@@ -9,6 +9,7 @@ const ThemeContext = createContext()
 
 export const ThemeProvider = ({ children }) => {
   const [isDarkMode, setIsDarkMode] = useState(true)
+  const [isInitialized, setIsInitialized] = useState(false)
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme')
@@ -19,6 +20,10 @@ export const ThemeProvider = ({ children }) => {
       setIsDarkMode(true)
       document.documentElement.classList.remove('light-mode')
     }
+    setTimeout(() => {
+      document.documentElement.classList.add('theme-transition')
+      setIsInitialized(true)
+    }, 50)
   }, [])
 
   const toggleTheme = () => {
@@ -35,7 +40,7 @@ export const ThemeProvider = ({ children }) => {
   }
 
   return (
-    <ThemeContext.Provider value={{ isDarkMode, toggleTheme }}>
+    <ThemeContext.Provider value={{ isDarkMode, toggleTheme, isInitialized }}>
       {children}
     </ThemeContext.Provider>
   )

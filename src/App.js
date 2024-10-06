@@ -17,7 +17,7 @@ function AppContent() {
   const [showPoke, setShowPoke] = useState(true)
   const [forceNavOpen, setForceNavOpen] = useState(false)
   const [hasUserHoveredNav, setHasUserHoveredNav] = useState(false)
-  const { isDarkMode } = useTheme()
+  const { isDarkMode, isInitialized } = useTheme()
 
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -60,16 +60,8 @@ function AppContent() {
     }
   }, [forceNavOpen])
 
-  useEffect(() => {
-    if (isDarkMode) {
-      document.body.classList.remove('light-mode')
-    } else {
-      document.body.classList.add('light-mode')
-    }
-  }, [isDarkMode])
-
   return (
-    <div className={`relative min-h-screen overflow-hidden`}>
+    <div className={`relative min-h-screen overflow-hidden ${isInitialized ? '' : 'opacity-0'}`}>
       <WavyBubbleRivers isDarkMode={isDarkMode} />
       <div className="relative z-10 min-h-screen">
         <div className={`absolute inset-0 backdrop-blur-sm ${isDarkMode ? 'bg-black/10' : 'bg-white/10'}`} />
